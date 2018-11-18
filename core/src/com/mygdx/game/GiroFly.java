@@ -16,7 +16,7 @@ public class GiroFly extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		gameStateManager = new GameStateManager();
-		Gdx.gl.glClearColor(1, 0, 0, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		gameStateManager.push(new MenuState(gameStateManager) {
 		});
 	}

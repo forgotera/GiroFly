@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class Girocopter {
 
-    public  static  final int GRAVITY = -10;
+    private static  final int GRAVITY = -10;
     private Vector3 position;
     private Vector3 velosity;
 
@@ -17,21 +17,25 @@ public class Girocopter {
         gyroTexture = new Texture("planeYellow1.png");
     }
 
-    public Texture getGyroTexture() {
-        return gyroTexture;
-    }
+    public Texture getGyroTexture() { return gyroTexture; }
 
-    public Vector3 getPosition() {
-
-        return position;
-    }
+    public Vector3 getPosition() { return position; }
 
     public void update(float delta){
-        velosity.add(0,GRAVITY,0);
+        if (position.y > 0) {
+            velosity.add(0, GRAVITY, 0);
+        }
         velosity.scl(delta);
-        position.add(0,velosity.y,0);
+        position.add(0, velosity.y, 0);
+
+        if(position.y < 0) position.y = 0;
+        if (position.y > 480) position.y = 480;
 
         velosity.scl(1/delta);
+    }
+
+    public void move(){
+        velosity.y +=25;
     }
 
 }

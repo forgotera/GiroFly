@@ -9,7 +9,7 @@ public class MenuState extends  State {
     private Texture back;
     private Texture button;
 
-    public MenuState(GameStateManager gameStateManager) {
+    protected MenuState(GameStateManager gameStateManager) {
         super(gameStateManager);
         back = new Texture("UIbg.png");
         button = new Texture("buttonLarge.png");
