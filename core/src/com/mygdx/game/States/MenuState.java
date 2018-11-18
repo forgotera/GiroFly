@@ -1,5 +1,6 @@
 package com.mygdx.game.States;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -10,8 +11,8 @@ public class MenuState extends  State {
 
     public MenuState(GameStateManager gameStateManager) {
         super(gameStateManager);
-        back = new Texture("Ulbg.png");
-        button = new Texture("buttonSmall.png");
+        back = new Texture("UIbg.png");
+        button = new Texture("buttonLarge.png");
     }
 
     @Override
@@ -26,14 +27,17 @@ public class MenuState extends  State {
 
     @Override
     public void render(SpriteBatch batch) {
+
         batch.begin();
-        batch.draw(back,0,0,);
+        batch.draw(back,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        batch.draw(button,((Gdx.graphics.getWidth()/2) - (button.getWidth()/2)),Gdx.graphics.getHeight()/2);
         batch.end();
 
     }
 
     @Override
     public void dispose() {
-
+        back.dispose();
+        button.dispose();
     }
 }

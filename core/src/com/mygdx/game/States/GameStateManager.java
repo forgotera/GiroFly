@@ -1,6 +1,5 @@
 package com.mygdx.game.States;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.Stack;
@@ -8,8 +7,8 @@ import java.util.Stack;
 public class GameStateManager {
     private Stack<State> states;
 
-    public GameStateManager(Stack<State> states) {
-        this.states = states;
+    public GameStateManager() {
+        states = new Stack<State>();
     }
 
     //добавить элемент в вершину стека
