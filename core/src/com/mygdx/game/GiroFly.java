@@ -10,8 +10,7 @@ import com.mygdx.game.States.MenuState;
 public class GiroFly extends ApplicationAdapter {
 
 	private GameStateManager gameStateManager;
-
-	SpriteBatch batch;
+	private SpriteBatch batch;
 	
 	@Override
 	public void create () {
