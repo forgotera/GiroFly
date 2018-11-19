@@ -29,13 +29,12 @@ public class Girocopter {
         position.add(0, velosity.y, 0);
 
         if(position.y < 0) position.y = 0;
-        if (position.y > 480) position.y = 480;
+        if (position.y > 400) position.y = 400;
 
         velosity.scl(1/delta);
     }
 
-    public void move(){
-        velosity.y +=25;
-    }
+    public void move(){velosity.y +=25;}
 
+    public void dispose(){gyroTexture.dispose();}
 }
