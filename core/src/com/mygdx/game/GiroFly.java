@@ -9,6 +9,9 @@ import com.mygdx.game.States.MenuState;
 
 public class GiroFly extends ApplicationAdapter {
 
+	public static  final int WIDTH = 800;
+	public static final int HEIGHT = 800;
+
 	private GameStateManager gameStateManager;
 	private SpriteBatch batch;
 	

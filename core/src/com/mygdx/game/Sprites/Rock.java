@@ -7,6 +7,16 @@ import java.util.Random;
 
 public class Rock {
 
+    private Texture upRockTexture;
+    private Texture downRockTexture;
+
+    private Vector2 upRockVector;
+    private Vector2 downRockVector;
+    private Random random;
+
+    public static final int WIDTH = 40;
+    public static final int SPACE = 250;
+
     public Texture getUpRockTexture() {
         return upRockTexture;
     }
@@ -23,22 +33,34 @@ public class Rock {
         return downRockVector;
     }
 
-    private Texture upRockTexture;
-    private Texture downRockTexture;
-
-    private Vector2 upRockVector;
-    private Vector2 downRockVector;
-
     public Rock(float x){
 
         upRockTexture = new Texture("rock.png");
         downRockTexture = new Texture("rockDown.png");
 
-        Random random = new Random();
+        random = new Random();
+
+        upRockVector = new Vector2(x +random.nextInt(123)+100,0);
+        //fixme расстояние межну скалами не должно быть меньше 250(200)
+        downRockVector = new Vector2(upRockVector.x + SPACE , 240);
+
+    }
+
+    /**
+     * изменение позиции при движение камеры
+     * @param x - координата x для скалы
+     */
+    public void reposition(float x){
 
         upRockVector = new Vector2(x,0);
         //fixme расстояние межну скалами не должно быть меньше 250(200)
-        downRockVector = new Vector2(upRockVector.x +(random.nextInt(1)+250),220);
+        downRockVector = new Vector2(upRockVector.x + SPACE , 240);
 
+
+    }
+
+    public  void dispose(){
+        downRockTexture.dispose();
+        upRockTexture.dispose();
     }
 }

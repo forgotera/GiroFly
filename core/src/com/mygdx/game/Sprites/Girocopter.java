@@ -3,8 +3,10 @@ package com.mygdx.game.Sprites;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
+
 public class Girocopter {
 
+    private static final int MOVENT = 100;
     private static  final int GRAVITY = -10;
     private Vector3 position;
     private Vector3 velosity;
@@ -26,7 +28,7 @@ public class Girocopter {
             velosity.add(0, GRAVITY, 0);
         }
         velosity.scl(delta);
-        position.add(0, velosity.y, 0);
+        position.add(MOVENT*delta, velosity.y, 0);
 
         if(position.y < 0) position.y = 0;
         if (position.y > 400) position.y = 400;
