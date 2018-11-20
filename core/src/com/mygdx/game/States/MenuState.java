@@ -17,7 +17,6 @@ public class MenuState extends  State {
 
     @Override
     protected void handleInput() {
-
         if(Gdx.input.justTouched()){
             gameStateManager.set(new GameState(gameStateManager));
         }
@@ -25,18 +24,15 @@ public class MenuState extends  State {
 
     @Override
     public void update(float delta) {
-
         handleInput();
     }
 
     @Override
     public void render(SpriteBatch batch) {
-
         batch.begin();
         batch.draw(back,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
         batch.draw(button,((Gdx.graphics.getWidth()/2) - (button.getWidth()/2)),Gdx.graphics.getHeight()/2);
         batch.end();
-
     }
 
     @Override

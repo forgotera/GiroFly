@@ -15,6 +15,7 @@ public class GameState extends State {
     private static final int ROCK_COUNT = 4;
     private static final int ROCK_SPACE = 400;
 
+    private Po
     private Texture backTexture;
     private Texture graundTexture;
     private Girocopter girocopter;
@@ -28,8 +29,8 @@ public class GameState extends State {
         rocks = new Array<Rock>();
         camera.setToOrtho(false,GiroFly.WIDTH,GiroFly.HEIGHT);
 
-        /**
-         * Добавление скал
+        /*
+          Добавление скал
          */
         for (int i = 0; i < ROCK_COUNT;i++){
             rocks.add(new Rock(i*(ROCK_SPACE+Rock.WIDTH)));
@@ -62,6 +63,9 @@ public class GameState extends State {
         for(Rock rock : rocks){
             if ( (camera.position.x - (camera.viewportWidth / 2) > rock.getDownRockVector().x+rock.getDownRockTexture().getWidth())){
                 rock.reposition(rock.getUpRockVector().x + ((Rock.WIDTH+ROCK_SPACE))*ROCK_COUNT);
+            }
+            if(rock.colight(girocopter.getGyrocopter())){
+                gameStateManager.set(new GameState(gameStateManager));
             }
         }
 
