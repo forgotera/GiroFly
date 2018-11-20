@@ -12,8 +12,8 @@ import com.mygdx.game.Sprites.Rock;
 
 public class GameState extends State {
 
-    private static final int ROCK_COUNT = 3;
-    private static final int ROCK_SPACE = 250;
+    private static final int ROCK_COUNT = 4;
+    private static final int ROCK_SPACE = 400;
 
     private Texture backTexture;
     private Texture graundTexture;
@@ -34,6 +34,7 @@ public class GameState extends State {
         for (int i = 0; i < ROCK_COUNT;i++){
             rocks.add(new Rock(i*(ROCK_SPACE+Rock.WIDTH)));
         }
+
     }
 
     @Override
@@ -57,8 +58,9 @@ public class GameState extends State {
         /*
           Перестановка скал из конца в начало
          */
+
         for(Rock rock : rocks){
-            if ( (camera.position.x - (camera.viewportWidth / 2) > rock.getUpRockVector().x+rock.getUpRockTexture().getWidth())){
+            if ( (camera.position.x - (camera.viewportWidth / 2) > rock.getDownRockVector().x+rock.getDownRockTexture().getWidth())){
                 rock.reposition(rock.getUpRockVector().x + ((Rock.WIDTH+ROCK_SPACE))*ROCK_COUNT);
             }
         }

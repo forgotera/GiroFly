@@ -12,10 +12,10 @@ public class Rock {
 
     private Vector2 upRockVector;
     private Vector2 downRockVector;
-    private Random random;
+    private  Random random;
 
     public static final int WIDTH = 40;
-    public static final int SPACE = 250;
+    private static final int SPACE = 200;
 
     public Texture getUpRockTexture() {
         return upRockTexture;
@@ -40,9 +40,9 @@ public class Rock {
 
         random = new Random();
 
-        upRockVector = new Vector2(x +random.nextInt(123)+100,0);
-        //fixme расстояние межну скалами не должно быть меньше 250(200)
-        downRockVector = new Vector2(upRockVector.x + SPACE , 240);
+        upRockVector = new Vector2(x ,0);
+        //рандомное расстояние от 250 до 320
+        downRockVector = new Vector2(upRockVector.x+random.nextInt(120)+SPACE, 240);
 
     }
 
@@ -52,10 +52,8 @@ public class Rock {
      */
     public void reposition(float x){
 
-        upRockVector = new Vector2(x,0);
-        //fixme расстояние межну скалами не должно быть меньше 250(200)
-        downRockVector = new Vector2(upRockVector.x + SPACE , 240);
-
+        upRockVector = new Vector2(x ,0);
+        downRockVector = new Vector2(upRockVector.x+random.nextInt(120)+SPACE , 240);
 
     }
 
