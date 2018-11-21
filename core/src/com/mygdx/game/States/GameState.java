@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.GiroFly;
 import com.mygdx.game.Sprites.Girocopter;
@@ -14,18 +15,28 @@ public class GameState extends State {
 
     private static final int ROCK_COUNT = 4;
     private static final int ROCK_SPACE = 400;
-
-    private Po
+    
     private Texture backTexture;
     private Texture graundTexture;
+    private Texture downGraundTexture;
+    private Vector2 groundVector1,groundVector2;
+    private Vector2 downGroundVector1,downGroundVector2;
     private Girocopter girocopter;
     private Array<Rock> rocks;
 
     GameState(GameStateManager gameStateManager) {
         super(gameStateManager);
-        girocopter = new Girocopter(50,300);
+        girocopter = new Girocopter(50,GiroFly.HEIGHT/4);
         backTexture = new Texture("background.png");
         graundTexture = new Texture("groundDirt.png");
+        downGraundTexture = new Texture("DownGroundDirt.png");
+
+        groundVector1 = new Vector2(camera.position.x-(camera.viewportWidth)/2,0);
+        groundVector2 = new Vector2(camera.position.x-(camera.viewportWidth/2)+graundTexture.getWidth(),0);
+
+        downGroundVector1 = new Vector2(camera.position.x-(camera.viewportWidth/2),GiroFly.HEIGHT-downGraundTexture.getHeight());
+        downGroundVector2 = new Vector2(camera.position.x-(camera.viewportWidth/2)+graundTexture.getWidth(),GiroFly.HEIGHT-downGraundTexture.getHeight());
+
         rocks = new Array<Rock>();
         camera.setToOrtho(false,GiroFly.WIDTH,GiroFly.HEIGHT);
 
@@ -40,7 +51,7 @@ public class GameState extends State {
 
     @Override
     protected void handleInput() {
-        if(Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)){
+        if(Gdx.input.isTouched()){
             girocopter.move();
         }
 
@@ -50,6 +61,7 @@ public class GameState extends State {
     public void update(float delta) {
         handleInput();
         girocopter.update(delta);
+        updateGround();
 
         /*
           Привязывваем камеру к вертолету
@@ -64,10 +76,15 @@ public class GameState extends State {
             if ( (camera.position.x - (camera.viewportWidth / 2) > rock.getDownRockVector().x+rock.getDownRockTexture().getWidth())){
                 rock.reposition(rock.getUpRockVector().x + ((Rock.WIDTH+ROCK_SPACE))*ROCK_COUNT);
             }
+
+            //соприкосновения спрайтов
+            /*
             if(rock.colight(girocopter.getGyrocopter())){
                 gameStateManager.set(new GameState(gameStateManager));
             }
+            */
         }
+
 
         camera.update();
     }
@@ -78,14 +95,42 @@ public class GameState extends State {
         batch.begin();
         batch.draw(backTexture,camera.position.x - (camera.viewportWidth/2),0);
         batch.draw(girocopter.getGyroTexture(),girocopter.getPosition().x,girocopter.getPosition().y);
-
         for(Rock rock :rocks) {
             batch.draw(rock.getUpRockTexture(), rock.getUpRockVector().x, rock.getUpRockVector().y);
             batch.draw(rock.getDownRockTexture(), rock.getDownRockVector().x, rock.getDownRockVector().y);
         }
-
-        batch.draw(graundTexture,camera.position.x - (camera.viewportWidth/2),0);
+        batch.draw(graundTexture,groundVector1.x,groundVector1.y);
+        batch.draw(graundTexture,groundVector2.x,groundVector2.y);
+        batch.draw(downGraundTexture,downGroundVector1.x,downGroundVector1.y);
+        batch.draw(downGraundTexture,downGroundVector2.x,downGroundVector2.y);
         batch.end();
+    }
+
+    private void updateGround(){
+
+
+        //высnавление земли снизу
+        //FIXME  земля с верху не повторятся
+        if(camera.position.x - (camera.viewportWidth/2) > groundVector1.x+graundTexture.getWidth()){
+             groundVector1.add(graundTexture.getWidth()*2,0);
+             downGroundVector1.add(graundTexture.getWidth()*2,GiroFly.HEIGHT-downGraundTexture.getHeight());
+        }
+        if (camera.position.x - (camera.viewportWidth/2) > groundVector2.x+graundTexture.getWidth()){
+           groundVector2.add(graundTexture.getWidth()*2,0);
+            downGroundVector2.add(graundTexture.getWidth()*2,GiroFly.HEIGHT-downGraundTexture.getHeight());
+        }
+
+
+        //выставление земли сверху
+        /*
+        if (camera.position.x - (camera.viewportWidth/2) > downGroundVector1.x+downGraundTexture.getWidth()){
+            downGroundVector1.add(downGraundTexture.getWidth()*2,407);
+        }
+        if(camera.position.x - (camera.viewportWidth/2) > downGroundVector2.x+downGraundTexture.getWidth()){
+            downGroundVector2.add(downGraundTexture.getWidth()*2,407);
+        }
+        */
+
     }
 
     @Override
@@ -93,6 +138,7 @@ public class GameState extends State {
         backTexture.dispose();
         graundTexture.dispose();
         girocopter.dispose();
+        downGraundTexture.dispose();
         for(int i =0; i < rocks.size;i++){
             rocks.get(i).dispose();
         }

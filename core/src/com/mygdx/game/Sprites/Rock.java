@@ -47,10 +47,10 @@ public class Rock {
 
         upRockVector = new Vector2(x ,0);
         //рандомное расстояние от 250 до 320
-        downRockVector = new Vector2(upRockVector.x+random.nextInt(100)+SPACE, 240);
+        downRockVector = new Vector2(upRockVector.x+random.nextInt(100)+SPACE, GiroFly.HEIGHT/2);
 
-        upRockRectangle = new Rectangle(upRockVector.x,upRockVector.y,upRockTexture.getWidth(),upRockTexture.getHeight()-45);
-        downRockRectandle = new Rectangle(downRockVector.x,downRockVector.y,downRockTexture.getWidth(),downRockTexture.getHeight()-45);
+        upRockRectangle = new Rectangle(upRockVector.x,upRockVector.y,upRockTexture.getWidth(),GiroFly.HEIGHT/2);
+        downRockRectandle = new Rectangle(downRockVector.x,downRockVector.y,downRockTexture.getWidth(),GiroFly.HEIGHT/2);
 
         //FIXME как сделать фигруы треукгольнвми?
         /**
@@ -67,7 +67,7 @@ public class Rock {
      */
     public void reposition(float x){
         upRockVector = new Vector2(x ,0);
-        downRockVector = new Vector2(upRockVector.x+random.nextInt(100)+SPACE , 240);
+        downRockVector = new Vector2(upRockVector.x+random.nextInt(100)+SPACE , GiroFly.HEIGHT/2);
         upRockRectangle.setPosition(upRockVector.x,upRockVector.y);
         downRockRectandle.setPosition(downRockVector.x,downRockVector.y);
 
