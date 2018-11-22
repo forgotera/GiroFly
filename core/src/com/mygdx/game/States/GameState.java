@@ -26,7 +26,7 @@ public class GameState extends State {
 
     GameState(GameStateManager gameStateManager) {
         super(gameStateManager);
-        girocopter = new Girocopter(50,GiroFly.HEIGHT/4);
+        girocopter = new Girocopter(300,GiroFly.HEIGHT/4);
         backTexture = new Texture("background.png");
         graundTexture = new Texture("groundDirt.png");
         downGraundTexture = new Texture("DownGroundDirt.png");
@@ -60,13 +60,15 @@ public class GameState extends State {
     @Override
     public void update(float delta) {
         handleInput();
-        girocopter.update(delta);
         updateGround();
 
+            //Передвижение вертолета
+            girocopter.update(delta);
         /*
           Привязывваем камеру к вертолету
          */
-        camera.position.x = girocopter.getPosition().x+100;
+            camera.position.x = girocopter.getPosition().x + 100;
+
 
         /*
           Перестановка скал из конца в начало
@@ -78,11 +80,12 @@ public class GameState extends State {
             }
 
             //соприкосновения спрайтов
-            /*
+
             if(rock.colight(girocopter.getGyrocopter())){
-                gameStateManager.set(new GameState(gameStateManager));
+                gameStateManager.set(new GameOverState(gameStateManager));
+
             }
-            */
+
         }
 
 
@@ -104,6 +107,7 @@ public class GameState extends State {
         batch.draw(downGraundTexture,downGroundVector1.x,downGroundVector1.y);
         batch.draw(downGraundTexture,downGroundVector2.x,downGroundVector2.y);
         batch.end();
+
     }
 
     private void updateGround(){
