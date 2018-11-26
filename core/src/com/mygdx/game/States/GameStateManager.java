@@ -16,13 +16,9 @@ public class GameStateManager {
         states.push(state);
     }
 
-    //извлекаем  верхний элемент и удаляем его
-    public void pop(){
-        states.pop().dispose();
-    }
 
     //удаляем верхний экран и помещать след экран в вершину стека
-    public  void set(State state){
+    void set(State state){
         states.pop().dispose();
         states.push(state);
     }

@@ -1,7 +1,6 @@
 package com.mygdx.game.Sprites;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g3d.particles.values.MeshSpawnShapeValue;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GiroFly;
@@ -20,7 +19,7 @@ public class Rock {
     private Rectangle downRockRectandle;
 
     public static final int WIDTH = 40;
-    private static final int SPACE = 200;
+    private static final int SPACE = 180;
 
     public Texture getUpRockTexture() {
         return upRockTexture;
@@ -45,12 +44,15 @@ public class Rock {
         random = new Random();
 
 
-        upRockVector = new Vector2(x ,0);
-        //рандомное расстояние от 250 до 320
-        downRockVector = new Vector2(upRockVector.x+random.nextInt(100)+SPACE, GiroFly.HEIGHT/2);
-
-        upRockRectangle = new Rectangle(upRockVector.x,upRockVector.y,upRockTexture.getWidth(),GiroFly.HEIGHT/2);
-        downRockRectandle = new Rectangle(downRockVector.x,downRockVector.y,downRockTexture.getWidth(),GiroFly.HEIGHT/2);
+        //FIXME нужен приличный рандом расположение скал
+        // формы скалам для соударения
+        if(random.nextInt(2) ==0) {
+            upRockVector = new Vector2(x ,0);
+            upRockRectangle = new Rectangle(upRockVector.x, upRockVector.y, upRockTexture.getWidth(), GiroFly.HEIGHT / 2);
+        }else {
+            downRockVector = new Vector2(x, GiroFly.HEIGHT/2);
+            downRockRectandle = new Rectangle(downRockVector.x, downRockVector.y, downRockTexture.getWidth(), GiroFly.HEIGHT / 2);
+        }
 
         //FIXME как сделать фигруы треукгольнвми?
         /**
@@ -65,12 +67,27 @@ public class Rock {
      * изменение позиции при движение камеры
      * @param x - координата x для скалы
      */
-    public void reposition(float x){
-        upRockVector = new Vector2(x ,0);
-        downRockVector = new Vector2(upRockVector.x+random.nextInt(100)+SPACE , GiroFly.HEIGHT/2);
-        upRockRectangle.setPosition(upRockVector.x,upRockVector.y);
-        downRockRectandle.setPosition(downRockVector.x,downRockVector.y);
 
+    public void randomSetRock(float x){
+        if(random.nextInt(2) ==0) {
+            upRockVector = new Vector2(x ,0);
+            System.out.println("upRockVector.x:"+upRockVector.x);
+        }else {
+            downRockVector = new Vector2(x, GiroFly.HEIGHT/2);
+            System.out.println("downRockVector:"+downRockVector.x);
+        }
+
+    }
+
+    public void repositionUpRock(float x){
+            upRockVector = new Vector2(x ,0);
+//            upRockRectangle.setPosition(upRockVector.x,upRockVector.y);
+           // downRockRectandle.setPosition(downRockVector.x, downRockVector.y);
+
+    }
+
+    public  void repositionDownRock(float x ){
+        downRockVector = new Vector2(x, GiroFly.HEIGHT/2);
     }
 
     public boolean colight(Rectangle player){

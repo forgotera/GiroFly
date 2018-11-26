@@ -17,7 +17,7 @@ public class MenuState extends  State {
 
     @Override
     protected void handleInput() {
-        //FIXME нужно добваить клики имеено по кнопкак. смотреть клик по координатам?
+        //FIXME нужно добваить клики именно по кнопкам. смотреть клик по координатам?
         if(Gdx.input.justTouched()){
             gameStateManager.set(new GameState(gameStateManager));
         }
