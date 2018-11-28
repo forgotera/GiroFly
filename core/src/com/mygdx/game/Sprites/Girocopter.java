@@ -8,7 +8,6 @@ import com.mygdx.game.GiroFly;
 
 public class Girocopter {
     private static int downRockHeight = 0;
-    private  static int upRockHeight = 0;
 
     private static final int MOVENT = 100;
     private static  final int GRAVITY = -10;
@@ -37,7 +36,6 @@ public class Girocopter {
         velosity.scl(delta);
         position.add(MOVENT*delta, velosity.y, 0);
         downRockHeight = downRockTexture.getHeight();
-        upRockHeight =upRockTexture.getHeight();
 
         if(position.y < upRockTexture.getHeight()/4) position.y = upRockTexture.getHeight()/4;
         if (position.y > GiroFly.HEIGHT - downRockTexture.getHeight()/2) position.y = GiroFly.HEIGHT-downRockTexture.getHeight()/2;

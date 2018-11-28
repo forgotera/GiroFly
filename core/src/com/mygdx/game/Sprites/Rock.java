@@ -14,12 +14,10 @@ public class Rock {
 
     private Vector2 upRockVector;
     private Vector2 downRockVector;
-    private  Random random;
     private  Rectangle upRockRectangle;
     private Rectangle downRockRectandle;
 
     public static final int WIDTH = 40;
-    private static final int SPACE = 180;
 
     public Texture getUpRockTexture() {
         return upRockTexture;
@@ -41,10 +39,9 @@ public class Rock {
         upRockTexture = new Texture("rock.png");
         downRockTexture = new Texture("rockDown.png");
 
-        random = new Random();
+        Random random = new Random();
 
 
-        //FIXME нужен приличный рандом расположение скал
         // формы скалам для соударения
         if(random.nextInt(2) ==0) {
             upRockVector = new Vector2(x ,0);
@@ -55,7 +52,7 @@ public class Rock {
         }
 
         //FIXME как сделать фигруы треукгольнвми?
-        /**
+         /**
         upRockTriangle = new MeshSpawnShapeValue.Triangle(upRockVector.x,upRockVector.y,0,upRockVector.x+WIDTH,upRockVector.y,0
                 ,(upRockVector.x - (upRockVector.x+WIDTH))/2,upRockVector.y+240,0);
         downRockTrinale = new MeshSpawnShapeValue.Triangle(downRockVector.x,downRockVector.y,0,downRockVector.x+WIDTH,downRockVector.y,0,
@@ -63,32 +60,8 @@ public class Rock {
          **/
     }
 
-    /**
-     * изменение позиции при движение камеры
-     * @param x - координата x для скалы
-     */
 
-    public void randomSetRock(float x){
-        if(random.nextInt(2) ==0) {
-            upRockVector = new Vector2(x ,0);
-            System.out.println("upRockVector.x:"+upRockVector.x);
-        }else {
-            downRockVector = new Vector2(x, GiroFly.HEIGHT/2);
-            System.out.println("downRockVector:"+downRockVector.x);
-        }
 
-    }
-
-    public void repositionUpRock(float x){
-            upRockVector = new Vector2(x ,0);
-//            upRockRectangle.setPosition(upRockVector.x,upRockVector.y);
-           // downRockRectandle.setPosition(downRockVector.x, downRockVector.y);
-
-    }
-
-    public  void repositionDownRock(float x ){
-        downRockVector = new Vector2(x, GiroFly.HEIGHT/2);
-    }
 
     public boolean colight(Rectangle player){
         return player.overlaps(upRockRectangle) || player.overlaps(downRockRectandle);
