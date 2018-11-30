@@ -1,7 +1,8 @@
 package com.mygdx.game.Sprites;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GiroFly;
 
@@ -14,8 +15,10 @@ public class Rock {
 
     private Vector2 upRockVector;
     private Vector2 downRockVector;
-    private  Rectangle upRockRectangle;
-    private Rectangle downRockRectandle;
+    private Polygon upRockPolygon;
+    private Polygon downRockPolygon;
+    boolean isOverlapsUp = false;
+    boolean isOverlapsDown = false;
 
     public static final int WIDTH = 40;
 
@@ -45,27 +48,49 @@ public class Rock {
         // формы скалам для соударения
         if(random.nextInt(2) ==0) {
             upRockVector = new Vector2(x ,0);
-            upRockRectangle = new Rectangle(upRockVector.x, upRockVector.y, upRockTexture.getWidth(), GiroFly.HEIGHT / 2);
+            upRockPolygon  = new Polygon(PolygonPointUpRock());
         }else {
             downRockVector = new Vector2(x, GiroFly.HEIGHT/2);
-            downRockRectandle = new Rectangle(downRockVector.x, downRockVector.y, downRockTexture.getWidth(), GiroFly.HEIGHT / 2);
+            downRockPolygon = new Polygon(PolygonPointDownRock());
         }
 
-        //FIXME как сделать фигруы треукгольнвми?
-         /**
-        upRockTriangle = new MeshSpawnShapeValue.Triangle(upRockVector.x,upRockVector.y,0,upRockVector.x+WIDTH,upRockVector.y,0
-                ,(upRockVector.x - (upRockVector.x+WIDTH))/2,upRockVector.y+240,0);
-        downRockTrinale = new MeshSpawnShapeValue.Triangle(downRockVector.x,downRockVector.y,0,downRockVector.x+WIDTH,downRockVector.y,0,
-                (downRockVector.x-(downRockVector.x+WIDTH)/2),downRockVector.y+240,0);
-         **/
     }
 
 
-
-
-    public boolean colight(Rectangle player){
-        return player.overlaps(upRockRectangle) || player.overlaps(downRockRectandle);
+    //необходимо сделать полигон
+    private float [] PolygonPointUpRock() {
+        float[] upRockPolylinePoints = new float[6];
+        upRockPolylinePoints[0] = upRockVector.x;
+        upRockPolylinePoints[1] = (0.0f);
+        upRockPolylinePoints[2] = (upRockTexture.getWidth() / 2) + upRockVector.x;
+        upRockPolylinePoints[3] = (float) upRockTexture.getHeight();
+        upRockPolylinePoints[4] = upRockVector.x + upRockTexture.getWidth();
+        upRockPolylinePoints[5] = 0;
+        return upRockPolylinePoints;
     }
+
+    private float[] PolygonPointDownRock(){
+        float[] downRockPolylinePoints = new float[6];
+        downRockPolylinePoints[0] = downRockVector.x;
+        downRockPolylinePoints[1] = GiroFly.HEIGHT;
+        downRockPolylinePoints[2] =  (downRockTexture.getWidth()/2)+downRockVector.x;
+        downRockPolylinePoints[3] = (float)  downRockTexture.getHeight();
+        downRockPolylinePoints[4] = downRockVector.x + downRockTexture.getWidth();
+        downRockPolylinePoints[5] = GiroFly.HEIGHT;
+        return downRockPolylinePoints;
+    }
+
+
+    public boolean colight(Polygon girocopter){
+       if(upRockPolygon != null){
+           isOverlapsUp = Intersector.overlapConvexPolygons(upRockPolygon,girocopter);
+       }
+       if(downRockPolygon != null){
+           isOverlapsDown = Intersector.overlapConvexPolygons(downRockPolygon,girocopter);
+       }
+        return  isOverlapsUp || isOverlapsDown;
+    }
+
 
     public  void dispose(){
         downRockTexture.dispose();

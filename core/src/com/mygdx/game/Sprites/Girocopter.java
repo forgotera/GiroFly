@@ -1,7 +1,7 @@
 package com.mygdx.game.Sprites;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.GiroFly;
 
@@ -14,7 +14,7 @@ public class Girocopter {
     private Vector3 position;
     private Vector3 velosity;
 
-    private Rectangle giroRedtangle;
+    private Polygon giroPoligon;
 
     private Texture gyroTexture;
 
@@ -22,7 +22,12 @@ public class Girocopter {
         position =  new Vector3(x , y,0);
         velosity = new Vector3(0,0,0);
         gyroTexture = new Texture("planeYellow1.png");
-        giroRedtangle = new Rectangle(x,y,gyroTexture.getWidth()-50,gyroTexture.getHeight()-50);
+        giroPoligon = new Polygon(polygonGirocopterPoint());
+    }
+
+    //Fixme надо немнного подравить размеры спрайта
+    private float[] polygonGirocopterPoint(){
+        return new float[] {0,0,gyroTexture.getWidth(),0,gyroTexture.getWidth(),gyroTexture.getHeight(),0,gyroTexture.getHeight()};
     }
 
     public Texture getGyroTexture() { return gyroTexture; }
@@ -41,7 +46,7 @@ public class Girocopter {
         if (position.y > GiroFly.HEIGHT - downRockTexture.getHeight()/2) position.y = GiroFly.HEIGHT-downRockTexture.getHeight()/2;
 
         velosity.scl(1/delta);
-        giroRedtangle.setPosition(position.x,position.y);
+       giroPoligon.setPosition(position.x,position.y);
     }
 
     public void move(){
@@ -54,7 +59,7 @@ public class Girocopter {
     }
     public void dispose(){gyroTexture.dispose();}
 
-    public Rectangle getGyrocopter(){
-        return giroRedtangle;
+    public Polygon getGyrocopter(){
+        return giroPoligon;
     }
 }

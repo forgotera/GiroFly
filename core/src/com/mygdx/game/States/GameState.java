@@ -86,6 +86,7 @@ public class GameState extends State {
                 предедущая скала удалясется и рандомно добавляется новая
             */
         for(int i =0;i<rocks.size;i++) {
+
             if (rocks.get(i).getDownRockVector() != null) {
                 if ((camera.position.x - (camera.viewportWidth / 2) > rocks.get(i).getDownRockVector().x + rocks.get(i).getDownRockTexture().getWidth())) {
                     rocks.add((new Rock(rocks.get(i).getDownRockVector().x + ((Rock.WIDTH + ROCK_SPACE)) * ROCK_COUNT)));
@@ -101,18 +102,13 @@ public class GameState extends State {
                     }
                 }
             }
+
+            if(rocks.get(i).colight(girocopter.getGyrocopter())){
+                gameStateManager.set(new GameOverState(gameStateManager));
+            }
+
             camera.update();
         }
-
-
-                //соприкосновения спрайтов
-/*
-            if(rock.colight(girocopter.getGyrocopter())){
-                gameStateManager.set(new GameOverState(gameStateManager));
-
-            }
-*/
-
 
     }
 
