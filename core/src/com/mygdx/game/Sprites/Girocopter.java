@@ -27,7 +27,8 @@ public class Girocopter {
 
     //Fixme надо немнного подравить размеры спрайта
     private float[] polygonGirocopterPoint(){
-        return new float[] {0,0,gyroTexture.getWidth(),0,gyroTexture.getWidth(),gyroTexture.getHeight(),0,gyroTexture.getHeight()};
+        //обрисовка вертолета по координинатам
+        return new float[] {0,14,5,10,21,10,21,0,74,0,73,7,86,18,86,64,82,67,68,66,6,72,57,72,47,65,33,61,25,65,18,57,19,44,9,32,1,29};
     }
 
     public Texture getGyroTexture() { return gyroTexture; }

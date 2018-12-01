@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GiroFly;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class Rock {
@@ -17,8 +18,8 @@ public class Rock {
     private Vector2 downRockVector;
     private Polygon upRockPolygon;
     private Polygon downRockPolygon;
-    boolean isOverlapsUp = false;
-    boolean isOverlapsDown = false;
+    private boolean isOverlapsUp = false;
+    private boolean isOverlapsDown = false;
 
     public static final int WIDTH = 40;
 
@@ -84,6 +85,7 @@ public class Rock {
     public boolean colight(Polygon girocopter){
        if(upRockPolygon != null){
            isOverlapsUp = Intersector.overlapConvexPolygons(upRockPolygon,girocopter);
+          // System.out.println(Arrays.toString(upRockPolygon.getTransformedVertices()));
        }
        if(downRockPolygon != null){
            isOverlapsDown = Intersector.overlapConvexPolygons(downRockPolygon,girocopter);

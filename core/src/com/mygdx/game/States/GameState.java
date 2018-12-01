@@ -2,12 +2,15 @@ package com.mygdx.game.States;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.GiroFly;
 import com.mygdx.game.Sprites.Girocopter;
 import com.mygdx.game.Sprites.Rock;
+import com.badlogic.gdx.graphics.Color;
 
 
 
@@ -23,6 +26,8 @@ public class GameState extends State {
     private Vector2 downGroundVector1,downGroundVector2;
     private Girocopter girocopter;
     private Array<Rock> rocks;
+    private int score;
+    private BitmapFont font;
 
 
     GameState(GameStateManager gameStateManager) {
@@ -31,6 +36,10 @@ public class GameState extends State {
         backTexture = new Texture("background.png");
         graundTexture = new Texture("groundDirt.png");
         downGraundTexture = new Texture("DownGroundDirt.png");
+        //отображение текста
+        font = new BitmapFont();
+        font.setColor(Color.RED);
+        score=0;
 
         groundVector1 = new Vector2(camera.position.x-(camera.viewportWidth)/2,0);
         groundVector2 = new Vector2(camera.position.x-(camera.viewportWidth/2)+graundTexture.getWidth(),0);
@@ -49,6 +58,12 @@ public class GameState extends State {
         }
 
 
+    }
+
+    private void displayMessage(SpriteBatch batch){
+        GlyphLayout glyphLayout = new GlyphLayout();
+        glyphLayout.setText(font, "Score: " + score);
+        font.draw(batch,glyphLayout,camera.position.x-400,GiroFly.HEIGHT);
     }
 
 
@@ -90,15 +105,27 @@ public class GameState extends State {
             if (rocks.get(i).getDownRockVector() != null) {
                 if ((camera.position.x - (camera.viewportWidth / 2) > rocks.get(i).getDownRockVector().x + rocks.get(i).getDownRockTexture().getWidth())) {
                     rocks.add((new Rock(rocks.get(i).getDownRockVector().x + ((Rock.WIDTH + ROCK_SPACE)) * ROCK_COUNT)));
+
+                    if(girocopter.getPosition().x  >= rocks.get(i).getDownRockVector().x){
+                        score++;
+                    }
+
                     rocks.removeIndex(i);
                 }
             } else {
                 if (rocks.get(i).getUpRockVector() != null) {
                     {
+
                         if (((camera.position.x - (camera.viewportWidth / 2) > rocks.get(i).getUpRockVector().x + rocks.get(i).getUpRockTexture().getWidth()))) {
                             rocks.add(new Rock(rocks.get(i).getUpRockVector().x + ((Rock.WIDTH + ROCK_SPACE)) * ROCK_COUNT));
+
+                            if(girocopter.getPosition().x  >= rocks.get(i).getUpRockVector().x){
+                                score++;
+                            }
+
                             rocks.removeIndex(i);
                         }
+
                     }
                 }
             }
@@ -130,6 +157,7 @@ public class GameState extends State {
         //WTF!?!  если брать координту y из vector2 спрайт не вставляется
         batch.draw(downGraundTexture,downGroundVector1.x,GiroFly.HEIGHT-downGraundTexture.getHeight());
         batch.draw(downGraundTexture,downGroundVector2.x,GiroFly.HEIGHT-downGraundTexture.getHeight());
+        displayMessage(batch);
         batch.end();
 
     }
