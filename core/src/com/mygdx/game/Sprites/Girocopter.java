@@ -9,8 +9,9 @@ import com.mygdx.game.GiroFly;
 public class Girocopter {
     private static int downRockHeight = 0;
 
-    private static final int MOVENT = 100;
-    private static  final int GRAVITY = -10;
+    private int movent = 100;
+    private int removent = 10;
+    private static  final int GRAVITY = -15;
     private Vector3 position;
     private Vector3 velosity;
 
@@ -37,11 +38,17 @@ public class Girocopter {
 
     public void update(float delta , Texture upRockTexture, Texture downRockTexture){
         if (position.y > 0) {
-            velosity.add(0, GRAVITY, 0);
+            velosity.add(movent, GRAVITY, 0);
         }
         velosity.scl(delta);
-        position.add(MOVENT*delta, velosity.y, 0);
+        position.add(movent*delta, velosity.y, 0);
         downRockHeight = downRockTexture.getHeight();
+
+        //System.out.println(position.x);
+        if(Math.round((position.x-300.0f)/100) %100  ==0 ){
+            movent+=5;
+            System.out.println(movent);
+        }
 
         if(position.y < upRockTexture.getHeight()/4) position.y = upRockTexture.getHeight()/4;
         if (position.y > GiroFly.HEIGHT - downRockTexture.getHeight()/2) position.y = GiroFly.HEIGHT-downRockTexture.getHeight()/2;
@@ -51,7 +58,7 @@ public class Girocopter {
     }
 
     public void move(){
-        velosity.y +=25;
+        velosity.y +=30;
         //фикс прилипания к вершнинам
         if (position.y >= GiroFly.HEIGHT-downRockHeight/2){
             velosity.y = 0;

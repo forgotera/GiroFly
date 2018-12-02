@@ -10,36 +10,38 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.GiroFly;
 import com.mygdx.game.Sprites.Girocopter;
 import com.mygdx.game.Sprites.Rock;
-import com.badlogic.gdx.graphics.Color;
 
 
 
 public class GameState extends State {
 
     private static final int ROCK_COUNT = 8;
-    private static final int ROCK_SPACE = 200;
+    private  int ROCK_SPACE = 230;
 
     private Texture backTexture;
     private Texture graundTexture;
     private Texture downGraundTexture;
+    private Texture tapTexture;
+    private Texture getReadyTexture;
     private Vector2 groundVector1,groundVector2;
     private Vector2 downGroundVector1,downGroundVector2;
     private Girocopter girocopter;
     private Array<Rock> rocks;
-    private int score;
     private BitmapFont font;
+    private Boolean isPause = true;
 
 
     GameState(GameStateManager gameStateManager) {
         super(gameStateManager);
-        girocopter = new Girocopter(300,GiroFly.HEIGHT/4);
+        girocopter = new Girocopter(100,GiroFly.HEIGHT/2);
         backTexture = new Texture("background.png");
         graundTexture = new Texture("groundDirt.png");
         downGraundTexture = new Texture("DownGroundDirt.png");
+        tapTexture = new Texture("tapTick.png");
+        getReadyTexture = new Texture("textGetReady.png");
         //отображение текста
-        font = new BitmapFont();
-        font.setColor(Color.RED);
-        score=0;
+        font = new BitmapFont(Gdx.files.internal("appetitenew2.fnt"));
+        font.getData().setScale(GiroFly.WIDTH/1300f);
 
         groundVector1 = new Vector2(camera.position.x-(camera.viewportWidth)/2,0);
         groundVector2 = new Vector2(camera.position.x-(camera.viewportWidth/2)+graundTexture.getWidth(),0);
@@ -54,7 +56,7 @@ public class GameState extends State {
         */
         rocks = new Array<Rock>();
         for (int i = 0; i < ROCK_COUNT;i++){
-            rocks.add(new Rock(i*ROCK_SPACE+Rock.WIDTH));
+            rocks.add(new Rock((i*ROCK_SPACE+Rock.WIDTH)+500));
         }
 
 
@@ -62,13 +64,22 @@ public class GameState extends State {
 
     private void displayMessage(SpriteBatch batch){
         GlyphLayout glyphLayout = new GlyphLayout();
-        glyphLayout.setText(font, "Score: " + score);
+        glyphLayout.setText(font, "Distance " + Math.round((girocopter.getPosition().x-100.0f)/100)+"m");
         font.draw(batch,glyphLayout,camera.position.x-400,GiroFly.HEIGHT);
+        if(isPause){
+           batch.draw(tapTexture,camera.position.x-tapTexture.getWidth()/2,camera.position.y-getReadyTexture.getHeight()+100);
+           batch.draw(getReadyTexture,camera.position.x-getReadyTexture.getWidth()/2,camera.position.y+100);
+        }
     }
 
 
     @Override
     protected void handleInput() {
+
+        if(Gdx.input.justTouched()){
+            isPause = false;
+        }
+
         //android управление
         if(Gdx.input.isTouched()){
             girocopter.move();
@@ -87,14 +98,17 @@ public class GameState extends State {
         handleInput();
         updateGround();
 
-        //FIXME нужно сделать увеличение скорости
+        //переменная для изменеия расстояния
+        if(!isPause) {
+            //FIXME нужно сделать увеличение скорости
             //Передвижение вертолета
-            girocopter.update(delta,rocks.get(1).getUpRockTexture(),rocks.get(1).getDownRockTexture());
+            girocopter.update(delta, rocks.get(1).getUpRockTexture(), rocks.get(1).getDownRockTexture());
 
         /*
           Привязывваем камеру к вертолету
          */
-            camera.position.x = girocopter.getPosition().x + 100;
+            camera.position.x = girocopter.getPosition().x+300;
+        }
 
             /*
              добавление скал
@@ -103,26 +117,18 @@ public class GameState extends State {
         for(int i =0;i<rocks.size;i++) {
 
             if (rocks.get(i).getDownRockVector() != null) {
+
                 if ((camera.position.x - (camera.viewportWidth / 2) > rocks.get(i).getDownRockVector().x + rocks.get(i).getDownRockTexture().getWidth())) {
                     rocks.add((new Rock(rocks.get(i).getDownRockVector().x + ((Rock.WIDTH + ROCK_SPACE)) * ROCK_COUNT)));
-
-                    if(girocopter.getPosition().x  >= rocks.get(i).getDownRockVector().x){
-                        score++;
-                    }
-
                     rocks.removeIndex(i);
                 }
+
             } else {
                 if (rocks.get(i).getUpRockVector() != null) {
                     {
 
                         if (((camera.position.x - (camera.viewportWidth / 2) > rocks.get(i).getUpRockVector().x + rocks.get(i).getUpRockTexture().getWidth()))) {
                             rocks.add(new Rock(rocks.get(i).getUpRockVector().x + ((Rock.WIDTH + ROCK_SPACE)) * ROCK_COUNT));
-
-                            if(girocopter.getPosition().x  >= rocks.get(i).getUpRockVector().x){
-                                score++;
-                            }
-
                             rocks.removeIndex(i);
                         }
 
@@ -130,9 +136,9 @@ public class GameState extends State {
                 }
             }
 
-            if(rocks.get(i).colight(girocopter.getGyrocopter())){
-                gameStateManager.set(new GameOverState(gameStateManager));
-            }
+          //  if(rocks.get(i).colight(girocopter.getGyrocopter())){
+           //     gameStateManager.set(new GameOverState(gameStateManager));
+            //}
 
             camera.update();
         }
