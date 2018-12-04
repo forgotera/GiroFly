@@ -29,6 +29,7 @@ public class GameState extends State {
     private Array<Rock> rocks;
     private BitmapFont font;
     private Boolean isPause = true;
+    private int respase = 0;
 
 
     GameState(GameStateManager gameStateManager) {
@@ -119,8 +120,12 @@ public class GameState extends State {
             if (rocks.get(i).getDownRockVector() != null) {
 
                 if ((camera.position.x - (camera.viewportWidth / 2) > rocks.get(i).getDownRockVector().x + rocks.get(i).getDownRockTexture().getWidth())) {
-                    rocks.add((new Rock(rocks.get(i).getDownRockVector().x + ((Rock.WIDTH + ROCK_SPACE)) * ROCK_COUNT)));
+                    System.out.println("down:"+rocks.get(i).getDownRockVector().x);
+                    rocks.add((new Rock((rocks.get(i).getDownRockVector().x + ((Rock.WIDTH + ROCK_SPACE)) * ROCK_COUNT)+respase)));
                     rocks.removeIndex(i);
+
+                    //изменение расстояния между скалами на 55
+                    respase+=55;
                 }
 
             } else {
@@ -128,17 +133,18 @@ public class GameState extends State {
                     {
 
                         if (((camera.position.x - (camera.viewportWidth / 2) > rocks.get(i).getUpRockVector().x + rocks.get(i).getUpRockTexture().getWidth()))) {
-                            rocks.add(new Rock(rocks.get(i).getUpRockVector().x + ((Rock.WIDTH + ROCK_SPACE)) * ROCK_COUNT));
+                            System.out.println("up:"+rocks.get(i).getUpRockVector().x);
+                            System.out.println("camera:"+camera.position.x);
+                            rocks.add(new Rock((rocks.get(i).getUpRockVector().x + ((Rock.WIDTH + ROCK_SPACE)) * ROCK_COUNT)+respase));
                             rocks.removeIndex(i);
                         }
 
                     }
                 }
             }
-
-          //  if(rocks.get(i).colight(girocopter.getGyrocopter())){
-           //     gameStateManager.set(new GameOverState(gameStateManager));
-            //}
+            if(rocks.get(i).colight(girocopter.getGyrocopter())){
+                gameStateManager.set(new GameOverState(gameStateManager,Math.round((girocopter.getPosition().x-100.0f)/100)));
+            }
 
             camera.update();
         }

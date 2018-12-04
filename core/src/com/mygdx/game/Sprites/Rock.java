@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GiroFly;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class Rock {
@@ -58,7 +57,6 @@ public class Rock {
     }
 
 
-    //необходимо сделать полигон
     private float [] PolygonPointUpRock() {
         float[] upRockPolylinePoints = new float[6];
         upRockPolylinePoints[0] = upRockVector.x;
@@ -85,7 +83,6 @@ public class Rock {
     public boolean colight(Polygon girocopter){
        if(upRockPolygon != null){
            isOverlapsUp = Intersector.overlapConvexPolygons(upRockPolygon,girocopter);
-          // System.out.println(Arrays.toString(upRockPolygon.getTransformedVertices()));
        }
        if(downRockPolygon != null){
            isOverlapsDown = Intersector.overlapConvexPolygons(downRockPolygon,girocopter);
