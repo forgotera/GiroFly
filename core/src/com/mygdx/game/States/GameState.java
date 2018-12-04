@@ -1,6 +1,7 @@
 package com.mygdx.game.States;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -30,20 +31,30 @@ public class GameState extends State {
     private BitmapFont font;
     private Boolean isPause = true;
     private int respase = 0;
+    private int hightScore;
+    private Preferences pref;
 
 
     GameState(GameStateManager gameStateManager) {
         super(gameStateManager);
+        pref = Gdx.app.getPreferences("Me preferences");
+        hightScore = pref.getInteger("highscore");
+
         girocopter = new Girocopter(100,GiroFly.HEIGHT/2);
         backTexture = new Texture("background.png");
+
         graundTexture = new Texture("groundDirt.png");
         downGraundTexture = new Texture("DownGroundDirt.png");
+
+
         tapTexture = new Texture("tapTick.png");
         getReadyTexture = new Texture("textGetReady.png");
+
         //отображение текста
         font = new BitmapFont(Gdx.files.internal("appetitenew2.fnt"));
         font.getData().setScale(GiroFly.WIDTH/1300f);
 
+        //позиция земли
         groundVector1 = new Vector2(camera.position.x-(camera.viewportWidth)/2,0);
         groundVector2 = new Vector2(camera.position.x-(camera.viewportWidth/2)+graundTexture.getWidth(),0);
 
@@ -56,17 +67,21 @@ public class GameState extends State {
          Добавление скал
         */
         rocks = new Array<Rock>();
+        addRock();
+    }
+
+
+    private void addRock(){
         for (int i = 0; i < ROCK_COUNT;i++){
             rocks.add(new Rock((i*ROCK_SPACE+Rock.WIDTH)+500));
         }
-
-
     }
 
     private void displayMessage(SpriteBatch batch){
         GlyphLayout glyphLayout = new GlyphLayout();
         glyphLayout.setText(font, "Distance " + Math.round((girocopter.getPosition().x-100.0f)/100)+"m");
-        font.draw(batch,glyphLayout,camera.position.x-400,GiroFly.HEIGHT);
+        font.draw(batch,glyphLayout,camera.position.x-390,GiroFly.HEIGHT);
+        font.draw(batch,"High Score " + hightScore,camera.position.x+230,GiroFly.HEIGHT);
         if(isPause){
            batch.draw(tapTexture,camera.position.x-tapTexture.getWidth()/2,camera.position.y-getReadyTexture.getHeight()+100);
            batch.draw(getReadyTexture,camera.position.x-getReadyTexture.getWidth()/2,camera.position.y+100);
@@ -120,7 +135,7 @@ public class GameState extends State {
             if (rocks.get(i).getDownRockVector() != null) {
 
                 if ((camera.position.x - (camera.viewportWidth / 2) > rocks.get(i).getDownRockVector().x + rocks.get(i).getDownRockTexture().getWidth())) {
-                    System.out.println("down:"+rocks.get(i).getDownRockVector().x);
+                    //System.out.println("down:"+rocks.get(i).getDownRockVector().x);
                     rocks.add((new Rock((rocks.get(i).getDownRockVector().x + ((Rock.WIDTH + ROCK_SPACE)) * ROCK_COUNT)+respase)));
                     rocks.removeIndex(i);
 
@@ -133,8 +148,8 @@ public class GameState extends State {
                     {
 
                         if (((camera.position.x - (camera.viewportWidth / 2) > rocks.get(i).getUpRockVector().x + rocks.get(i).getUpRockTexture().getWidth()))) {
-                            System.out.println("up:"+rocks.get(i).getUpRockVector().x);
-                            System.out.println("camera:"+camera.position.x);
+                            //System.out.println("up:"+rocks.get(i).getUpRockVector().x);
+                            //System.out.println("camera:"+camera.position.x);
                             rocks.add(new Rock((rocks.get(i).getUpRockVector().x + ((Rock.WIDTH + ROCK_SPACE)) * ROCK_COUNT)+respase));
                             rocks.removeIndex(i);
                         }
@@ -142,13 +157,21 @@ public class GameState extends State {
                     }
                 }
             }
-            if(rocks.get(i).colight(girocopter.getGyrocopter())){
-                gameStateManager.set(new GameOverState(gameStateManager,Math.round((girocopter.getPosition().x-100.0f)/100)));
-            }
 
+            collision(i);
             camera.update();
         }
 
+    }
+
+    private void collision(int i){
+        if(rocks.get(i).colight(girocopter.getGyrocopter())){
+            gameStateManager.set(new GameOverState(gameStateManager,Math.round((girocopter.getPosition().x-100.0f)/100)));
+        }
+
+        if(Math.round((girocopter.getPosition().x-100.0f)/100) >hightScore){
+            hightScore = Math.round((girocopter.getPosition().x-100.0f)/100);
+        }
     }
 
     @Override
@@ -169,30 +192,33 @@ public class GameState extends State {
         //WTF!?!  если брать координту y из vector2 спрайт не вставляется
         batch.draw(downGraundTexture,downGroundVector1.x,GiroFly.HEIGHT-downGraundTexture.getHeight());
         batch.draw(downGraundTexture,downGroundVector2.x,GiroFly.HEIGHT-downGraundTexture.getHeight());
+        //display text
         displayMessage(batch);
         batch.end();
 
     }
 
     private void updateGround(){
-
-
         //выставление земли
         //WTF!?!
         if(camera.position.x - (camera.viewportWidth/2) > groundVector1.x+graundTexture.getWidth()){
              groundVector1.add(graundTexture.getWidth()*2,0);
              downGroundVector1.add(graundTexture.getWidth()*2,GiroFly.HEIGHT-downGraundTexture.getHeight());
+
         }
         if (camera.position.x - (camera.viewportWidth/2) > groundVector2.x+graundTexture.getWidth()){
            groundVector2.add(graundTexture.getWidth()*2,0);
            downGroundVector2.add(graundTexture.getWidth()*2,GiroFly.HEIGHT-downGraundTexture.getHeight());
-        }
 
+        }
 
     }
 
+
     @Override
     public void dispose() {
+        pref.putInteger("highscore",hightScore);
+        pref.flush();
         backTexture.dispose();
         graundTexture.dispose();
         girocopter.dispose();
@@ -201,4 +227,5 @@ public class GameState extends State {
             rocks.get(i).dispose();
         }
     }
+
 }

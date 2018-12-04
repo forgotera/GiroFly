@@ -10,7 +10,6 @@ public class Girocopter {
     private static int downRockHeight = 0;
 
     private int movment = 100;
-    private int removent = 10;
     private static  final int GRAVITY = -15;
     private Vector3 position;
     private Vector3 velosity;
@@ -46,9 +45,9 @@ public class Girocopter {
 
         if(Math.round((position.x-300.0f)/100) %100  ==0 ){
             movment+=5;
-            System.out.println(movment);
         }
 
+        //чтобы вертолет не улетал за рамки
         if(position.y < upRockTexture.getHeight()/4) position.y = upRockTexture.getHeight()/4;
         if (position.y > GiroFly.HEIGHT - downRockTexture.getHeight()/2) position.y = GiroFly.HEIGHT-downRockTexture.getHeight()/2;
 
@@ -61,6 +60,9 @@ public class Girocopter {
         //фикс прилипания к вершнинам
         if (position.y >= GiroFly.HEIGHT-downRockHeight/2){
             velosity.y = 0;
+        }
+        if(position.y <= 59){
+            velosity.y += 90;
         }
 
     }
