@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.GiroFly;
 import com.mygdx.game.Sprites.Girocopter;
@@ -24,6 +25,7 @@ public class GameState extends State {
     private Texture downGraundTexture;
     private Texture tapTexture;
     private Texture getReadyTexture;
+    private Texture pauseTexture;
     private Vector2 groundVector1,groundVector2;
     private Vector2 downGroundVector1,downGroundVector2;
     private Girocopter girocopter;
@@ -49,6 +51,8 @@ public class GameState extends State {
 
         tapTexture = new Texture("tapTick.png");
         getReadyTexture = new Texture("textGetReady.png");
+
+        pauseTexture = new Texture("pause.png");
 
         //отображение текста
         font = new BitmapFont(Gdx.files.internal("appetitenew2.fnt"));
@@ -96,16 +100,24 @@ public class GameState extends State {
             isPause = false;
         }
 
+        Vector3 temp = new Vector3();
+        if(Gdx.input.justTouched()) {
+            // Получаем координаты касания и устанавливаем эти значения в временный вектор
+            temp.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            // получаем координаты касания относительно области просмотра нашей камеры
+            camera.unproject(temp);
+            float touchX = temp.x;
+            float touchY = temp.y;
+            if ((touchX >= camera.position.x - 50 / 2) &&
+                    touchX <= (camera.position.x - 50 / 2 +50) && (touchY >= 0) && touchY <=  50) {
+                isPause = true;
+            }
+        }
+
         //android управление
         if(Gdx.input.isTouched()){
             girocopter.move();
         }
-
-
-        /*desktop
-        if(Gdx.input.isKeyPressed(Input.Keys.ANY_KEY)){
-            girocopter.move();
-        }*/
 
     }
 
@@ -116,7 +128,6 @@ public class GameState extends State {
 
         //переменная для изменеия расстояния
         if(!isPause) {
-            //FIXME нужно сделать увеличение скорости
             //Передвижение вертолета
             girocopter.update(delta, rocks.get(1).getUpRockTexture(), rocks.get(1).getDownRockTexture());
 
@@ -189,6 +200,7 @@ public class GameState extends State {
         }
         batch.draw(graundTexture,groundVector1.x,groundVector1.y);
         batch.draw(graundTexture,groundVector2.x,groundVector2.y);
+        batch.draw(pauseTexture,camera.position.x-tapTexture.getWidth()/2,0,50,50);
         //WTF!?!  если брать координту y из vector2 спрайт не вставляется
         batch.draw(downGraundTexture,downGroundVector1.x,GiroFly.HEIGHT-downGraundTexture.getHeight());
         batch.draw(downGraundTexture,downGroundVector2.x,GiroFly.HEIGHT-downGraundTexture.getHeight());

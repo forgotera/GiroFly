@@ -1,6 +1,7 @@
 package com.mygdx.game.States;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -49,7 +50,7 @@ public class GameOverState extends State {
     public void render(SpriteBatch batch) {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(back,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        batch.draw(back,0,0,GiroFly.WIDTH,GiroFly.HEIGHT);
         displayScore(batch);
         batch.draw(gameOverTexture,camera.position.x-gameOverTexture.getWidth() /2,camera.position.y);
         batch.draw(tapTexture,camera.position.x - tapTexture.getWidth()/2,camera.position.y-gameOverTexture.getHeight()-100);

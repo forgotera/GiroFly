@@ -19,18 +19,19 @@ public class MenuState extends  State {
 
     protected MenuState(GameStateManager gameStateManager) {
         super(gameStateManager);
-        camera = new OrthographicCamera(GiroFly.WIDTH,GiroFly.HEIGHT);
-        camera.setToOrtho(false);
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false,GiroFly.WIDTH,GiroFly.HEIGHT);
         back = new Texture("UIbg.png");
         backGroundSprite = new Sprite(back);
-        buttonStart = new Texture("buttonLarge.png");
-        Texture buttonExit = new Texture("buttonLarge.png");
+        buttonStart = new Texture("buttonStart.png");
+        Texture buttonExit = new Texture("buttonExit.png");
         buttonStartSprite = new Sprite(buttonStart);
         buttonExitSprite = new Sprite(buttonExit);
         // задаём относительный размер
         float BUTTON_RESIZE_FACTOR = 800f;
         buttonStartSprite.setSize(buttonStartSprite.getWidth() *(GiroFly.WIDTH/ BUTTON_RESIZE_FACTOR), buttonStartSprite.getHeight()*(GiroFly.WIDTH/ BUTTON_RESIZE_FACTOR));
         buttonExitSprite.setSize(buttonExitSprite.getWidth() *(GiroFly.WIDTH/ BUTTON_RESIZE_FACTOR), buttonExitSprite.getHeight()*(GiroFly.WIDTH/ BUTTON_RESIZE_FACTOR));
+
         backGroundSprite.setSize(GiroFly.WIDTH,GiroFly.HEIGHT);
         // задаём позицию конпки start
         float START_VERT_POSITION_FACTOR = 2.7f;
@@ -70,6 +71,7 @@ public class MenuState extends  State {
 
     @Override
     public void render(SpriteBatch batch) {
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
         backGroundSprite.draw(batch);
         buttonStartSprite.draw(batch);
